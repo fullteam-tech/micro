@@ -33,7 +33,6 @@ import (
 	"github.com/micro/go-micro/v2/sync/memory"
 	apiAuth "github.com/micro/micro/v2/client/api/auth"
 	inauth "github.com/micro/micro/v2/internal/auth"
-	"github.com/micro/micro/v2/internal/handler"
 	"github.com/micro/micro/v2/internal/helper"
 	"github.com/micro/micro/v2/internal/namespace"
 	"github.com/micro/micro/v2/internal/resolver/web"
@@ -513,13 +512,22 @@ func Run(ctx *cli.Context, srvOpts ...micro.Option) {
 	p := s.proxy()
 
 	// the web handler itself
-	s.HandleFunc("/favicon.ico", faviconHandler)
-	s.HandleFunc("/client", s.callHandler)
-	s.HandleFunc("/services", s.registryHandler)
-	s.HandleFunc("/service/{name}", s.registryHandler)
-	s.HandleFunc("/rpc", handler.RPC)
+	// s.HandleFunc("/favicon.ico", faviconHandler)
+	// s.HandleFunc("/client", s.callHandler)
+	// s.HandleFunc("/services", s.registryHandler)
+	// s.HandleFunc("/service/{name}", s.registryHandler)
+	// s.HandleFunc("/rpc", handler.RPC)
 	s.PathPrefix("/{service:[a-zA-Z0-9]+}").Handler(p)
-	s.HandleFunc("/", s.indexHandler)
+	// s.HandleFunc("/", s.indexHandler)
+	s.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		// marshal response
+		b, _ := json.Marshal(map[string]interface{}{
+			"version": "latest",
+		})
+
+		// write response
+		w.Write(b)
+	})
 
 	// insert the proxy
 	s.prx = p
