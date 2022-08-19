@@ -39,6 +39,8 @@ import (
 	"github.com/micro/micro/v2/internal/stats"
 	"github.com/micro/micro/v2/plugin"
 	"github.com/serenize/snaker"
+	"go.elastic.co/apm"
+	"go.elastic.co/apm/module/apmhttp"
 	"golang.org/x/net/publicsuffix"
 )
 
@@ -497,7 +499,10 @@ func Run(ctx *cli.Context, srvOpts ...micro.Option) {
 
 	var h http.Handler
 	// set as the server
-	h = s
+	if os.Getenv("ELASTIC_APM_SERVER_URL") != "" {
+		apm.DefaultTracer.Service.Name = os.Getenv("MICRO_SERVER_NAME")
+	}
+	h = apmhttp.Wrap(s)
 
 	if ctx.Bool("enable_stats") {
 		statsURL = "/stats"

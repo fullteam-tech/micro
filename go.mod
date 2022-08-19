@@ -25,11 +25,13 @@ require (
 	github.com/pkg/errors v0.9.1
 	github.com/serenize/snaker v0.0.0-20171204205717-a683aaf2d516
 	github.com/spf13/viper v1.6.3
-	github.com/stretchr/testify v1.4.0
+	github.com/stretchr/testify v1.6.1
 	github.com/xlab/treeprint v0.0.0-20181112141820-a009c3971eca
+	go.elastic.co/apm v1.14.0
+	go.elastic.co/apm/module/apmhttp v1.14.0
 	golang.org/x/crypto v0.0.0-20200510223506-06a226fb4e37
 	golang.org/x/net v0.0.0-20200520182314-0ba52f642ac2
-	golang.org/x/tools v0.0.0-20191216173652-a0e659d51361
+	golang.org/x/tools v0.0.0-20200509030707-2212a7e161a5
 	google.golang.org/genproto v0.0.0-20191216164720-4f79533eabd1
 	google.golang.org/grpc v1.26.0
 )
