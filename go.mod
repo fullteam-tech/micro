@@ -27,8 +27,8 @@ require (
 	github.com/spf13/viper v1.6.3
 	github.com/stretchr/testify v1.6.1
 	github.com/xlab/treeprint v0.0.0-20181112141820-a009c3971eca
-	go.elastic.co/apm v1.14.0
-	go.elastic.co/apm/module/apmhttp v1.14.0
+	go.elastic.co/apm v1.15.0
+	go.elastic.co/apm/module/apmgorilla v1.15.0
 	golang.org/x/crypto v0.0.0-20200510223506-06a226fb4e37
 	golang.org/x/net v0.0.0-20200520182314-0ba52f642ac2
 	golang.org/x/tools v0.0.0-20200509030707-2212a7e161a5

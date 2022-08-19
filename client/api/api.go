@@ -37,6 +37,8 @@ import (
 	rrmicro "github.com/micro/micro/v2/internal/resolver/api"
 	"github.com/micro/micro/v2/internal/stats"
 	"github.com/micro/micro/v2/plugin"
+	"go.elastic.co/apm"
+	"go.elastic.co/apm/module/apmgorilla"
 )
 
 var (
@@ -164,7 +166,12 @@ func Run(ctx *cli.Context, srvOpts ...micro.Option) {
 
 	// create the router
 	var h http.Handler
-	r := mux.NewRouter()
+	if os.Getenv("ELASTIC_APM_SERVER_URL") != "" {
+		apm.DefaultTracer.Service.Name = strings.ReplaceAll(os.Getenv("MICRO_SERVER_NAME"), ".", "-")
+	}
+	muxRouter := mux.NewRouter()
+	apmgorilla.Instrument(muxRouter)
+	r := muxRouter
 	h = r
 
 	if ctx.Bool("enable_stats") {
