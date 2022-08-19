@@ -499,10 +499,12 @@ func Run(ctx *cli.Context, srvOpts ...micro.Option) {
 
 	var h http.Handler
 	// set as the server
+	fmt.Println(os.Getenv("ELASTIC_APM_SERVER_URL"))
 	if os.Getenv("ELASTIC_APM_SERVER_URL") != "" {
 		apm.DefaultTracer.Service.Name = os.Getenv("MICRO_SERVER_NAME")
 	}
 	h = apmhttp.Wrap(s)
+	fmt.Println(h)
 
 	if ctx.Bool("enable_stats") {
 		statsURL = "/stats"
