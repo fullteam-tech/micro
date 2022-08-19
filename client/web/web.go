@@ -39,7 +39,8 @@ import (
 	"github.com/micro/micro/v2/internal/stats"
 	"github.com/micro/micro/v2/plugin"
 	"github.com/serenize/snaker"
-	"go.elastic.co/apm/module/apmhttp"
+	"go.elastic.co/apm"
+	"go.elastic.co/apm/module/apmgorilla"
 	"golang.org/x/net/publicsuffix"
 )
 
@@ -480,9 +481,13 @@ func Run(ctx *cli.Context, srvOpts ...micro.Option) {
 	service := micro.NewService(srvOpts...)
 
 	reg := &reg{Registry: *cmd.DefaultOptions().Registry}
-
+	if os.Getenv("ELASTIC_APM_SERVER_URL") != "" {
+		apm.DefaultTracer.Service.Name = strings.ReplaceAll(os.Getenv("MICRO_SERVER_NAME"), ".", "-")
+	}
+	muxRouter := mux.NewRouter()
+	apmgorilla.Instrument(muxRouter)
 	s := &srv{
-		Router:   mux.NewRouter(),
+		Router:   muxRouter,
 		registry: reg,
 		// our internal resolver
 		resolver: &web.Resolver{
@@ -498,8 +503,7 @@ func Run(ctx *cli.Context, srvOpts ...micro.Option) {
 
 	var h http.Handler
 	// set as the server
-
-	h = apmhttp.Wrap(s)
+	h = s
 
 	if ctx.Bool("enable_stats") {
 		statsURL = "/stats"
